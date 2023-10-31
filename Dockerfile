@@ -1,9 +1,8 @@
-FROM ubuntu:latest 
-RUN apt-get update && apt-get install -y \
- python3 \
- python3-pip \
- python3-dev \
- build-essential
+FROM alpine:latest 
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
 
 COPY ./src/requirements.txt /usr/src/app/
 RUN pip3 install --no-cache-dir -r /usr/src/app/requirements.txt
