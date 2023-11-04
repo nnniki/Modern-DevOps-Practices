@@ -17,6 +17,9 @@ jobs:
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: ${{github.workspace}}/src
+          
       
       - name: Build and push docker image
         uses: mr-smithers-excellent/docker-build-push@v6
