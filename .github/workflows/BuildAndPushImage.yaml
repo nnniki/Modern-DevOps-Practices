@@ -22,8 +22,6 @@ jobs:
           
   SonarCloudTest:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -68,6 +66,4 @@ jobs:
 
       - name: Push an image to DockerHub
         run: docker push nikolaykostandiev/modern_devops_practices:1.0
-      
-
-      
+    
