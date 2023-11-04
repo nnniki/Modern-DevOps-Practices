@@ -1,8 +1,6 @@
 name: Run SonarCloud on pull-request
 
-on:
-  pull-request:
-  workflow_dispatch:
+on: pull_request
 
 jobs:
   SonarCloudTest:
