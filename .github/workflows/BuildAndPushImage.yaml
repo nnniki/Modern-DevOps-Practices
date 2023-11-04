@@ -18,7 +18,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: ${{github.workspace}}/src --file=requrements.txt --package-manager=pip
+          args: ${{github.workspace}}/src
       
       # - name: Run Snyk to check for vulnerabilities
       #   working-directory: ${{github.workspace}}/src
