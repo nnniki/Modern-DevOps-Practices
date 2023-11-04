@@ -13,27 +13,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      # - name: Run Snyk to check for vulnerabilities
-      #   uses: snyk/actions/python@master
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #   with:
-      #     args: ${{github.workspace}}/src
       - name: Run Snyk to check for vulnerabilities
-        working-directory: ${{github.workspace}}/src
-        run: |
-          pip install -r requirements.txt
-          npm install -g snyk
-          snyk auth ${{secrets.SNYK_TOKEN}}
-          snyk test
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: ${{github.workspace}}/src --all-projects --detection-depth=5
+      
+      # - name: Run Snyk to check for vulnerabilities
+      #   working-directory: ${{github.workspace}}/src
+      #   run: |
+      #     pip install -r requirements.txt
+      #     npm install -g snyk
+      #     snyk auth ${{secrets.SNYK_TOKEN}}
+      #     snyk test
            
       # - name: SonarCloud Scan
       #   uses: sonarsource/sonarcloud-github-action@master
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      
-        
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
       
       - name: Build and push docker image
         uses: mr-smithers-excellent/docker-build-push@v6
