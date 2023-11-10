@@ -55,11 +55,26 @@ jobs:
         run: pip install editorconfig-checker
         
       - name: Start checking
-        run: ec  
+        run: ec
+        
+  MarkdownFilesCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install mardownlint
+        run: |
+          apt update
+          apt install npm
+          npm i cli-markdown
+
+      - name: Run markdownlint test
+        run: npm run test
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
-    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck"]
+    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
