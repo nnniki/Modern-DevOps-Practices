@@ -50,7 +50,7 @@ We will then take care of the issue as soon as possible.
 
 ## I Want To Contribute
 
-> ### Legal Notice <!-- omit in toc -->
+### Legal Notice  <!-- omit in toc -->
 > When contributing to this project, you must agree that you
 > have authored 100% of the content,
 > that you have the necessary rights to the content and that
