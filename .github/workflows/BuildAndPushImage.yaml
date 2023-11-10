@@ -1,4 +1,4 @@
-name: Docker build and push
+name: Check code for vulnerabilities and build andpush docker image
 
 on:
   push:
@@ -32,9 +32,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-and-push:
+  CheckCodeAndStyle:
     runs-on: ubuntu-latest
-    needs: ["SnykTest", "SonarCloudTest"]
+    container: python:3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install flake8
+        run: python3 -m pipinstall flake8
+
+      - name: Check style
+        run: flake8 .
+
+
+  BuildAndPushImage:
+    runs-on: ubuntu-latest
+    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle"]
     permissions:
      packages: write
     steps:
