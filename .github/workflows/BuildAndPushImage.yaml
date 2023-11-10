@@ -81,7 +81,7 @@ jobs:
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
-    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck"]
+    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "UnitTests"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
