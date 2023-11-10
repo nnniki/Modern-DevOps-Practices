@@ -45,12 +45,33 @@ jobs:
       - name: Check style
         run: flake8 src
 
+  EditorConfigCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Install editorconfig-checker
+        run: pip install editorconfig-checker
+        
+      - name: Start checking
+        run: ec
+        
+  MarkdownFilesCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install mardownlint
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint test
+        run: markdownlint .
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
-    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle"]
-    permissions:
-     packages: write
+    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
