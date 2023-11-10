@@ -65,8 +65,8 @@ jobs:
 
       - name: Install mardownlint
         run: |
-          apt-get update
-          apt-get install npm
+          sudo apt-get update
+          sudo apt-get install npm
           npm i cli-markdown
 
       - name: Run markdownlint test
