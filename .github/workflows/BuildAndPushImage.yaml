@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run unit tests
-        run: python3 -m unittest test/app_test.py
+        run: python3 -m unittest src/app_test.py
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
