@@ -34,7 +34,7 @@ python3 src/app.py
 - Scan the built Docker image with Trivy as part of the existing workflow
 - Implement a new GitHub workflow with SonarCloud at Merge Request
 
-### Style 
+### Style
 
 - Add a license
 - Add an .editorconfig
@@ -54,4 +54,5 @@ python3 src/app.py
 - Practice PR - see results
 
 ### Bonus
+
 - Optimize the size of the Docker image. Use a more minimal base image.
