@@ -127,7 +127,7 @@ jobs:
             -v "$(pwd)/flyway/config:/flyway/conf" \
             redgate/flyway \
             -url="jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true" \
-            -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} \
+            -user=flyway -password=123456 \
             migrate
 
   BuildAndPushImage:
