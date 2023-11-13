@@ -101,7 +101,7 @@ jobs:
         env:
           MYSQL_DB: ${{secrets.MYSQL_DB}}
           MYSQL_USER: ${{secrets.MYSQL_USER}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_ROOT_PASSWORD}}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -113,12 +113,12 @@ jobs:
         with:
           url: dbc:mysql://172.17.0.2:3306/example
           user: MYSQL_USER
-          password: MYSQL_PASSWORD
+          password: MYSQL_ROOT_PASSWORD
       - run: echo 'testing
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
-    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "UnitTests", "HardcodedSecretsCheck"]
+    needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "UnitTests", "HardcodedSecretsCheck", "CheckForDatabaseMigrations"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
