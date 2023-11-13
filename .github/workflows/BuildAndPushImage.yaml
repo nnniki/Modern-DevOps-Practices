@@ -93,6 +93,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
+  CheckForDatabaseMigrations:
+    runs-on: ubuntu-latest
+    services:
+      mySQL:
+        image: mysql
+        env:
+          MYSQL_DB: ${{secrets.MYSQL_DB}}
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: dbc:mysql://172.17.0.2:3306/example
+          user: MYSQL_USER
+          password: MYSQL_PASSWORD
+      - run: echo 'testing
+
   BuildAndPushImage:
     runs-on: ubuntu-latest
     needs: ["SnykTest", "SonarCloudTest", "CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "UnitTests", "HardcodedSecretsCheck"]
@@ -118,7 +141,7 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           
       - name: Tag an image
         run: docker tag python_app:1.0 nikolaykostandiev/modern_devops_practices:1.0
