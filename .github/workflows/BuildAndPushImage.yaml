@@ -110,14 +110,16 @@ jobs:
           --health-retries 5
         ports:
         - 3306:3306
+        
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - uses: joshuaavalon/flyway-action@v3.0.0
         with:
-          url: dbc:mysql://172.17.0.2:3306/example
+          url: "jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true"
           user: MYSQL_USER
           password: MYSQL_ROOT_PASSWORD
-      - run: echo 'testing
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
