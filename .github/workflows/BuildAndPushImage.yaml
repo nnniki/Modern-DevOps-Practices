@@ -138,7 +138,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build an image
-        run: docker build -t "python_app:$VERSION" .
+        run: docker build -t "python_app:$VERSION" --build-arg VERSION="$VERSION".
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -166,11 +166,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build an image
-        run: docker build -t "python_app:1.0" .
+        run: docker build -t "python_app:$VERSION" --build-arg VERSION="$VERSION" .
           
       - name: Tag an image
-        run: docker tag python_app:1.0 nikolaykostandiev/modern_devops_practices:1.0
+        run: docker tag python_app:$VERSION nikolaykostandiev/modern_devops_practices:$VERSION
 
       - name: Push an image to DockerHub
-        run: docker push nikolaykostandiev/modern_devops_practices:1.0
+        run: docker push nikolaykostandiev/modern_devops_practices:$VERSION
     
