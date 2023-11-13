@@ -1,4 +1,4 @@
-name: Check code for vulnerabilities and build andpush docker image
+name: Check code for vulnerabilities and build and push docker image
 
 on:
   push:
@@ -104,7 +104,7 @@ jobs:
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
           MYSQL_DATABASE: ${{secrets.MYSQL_DB}}
         options: >-
-          --health-cmd "mysqladmin ping"
+          --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -114,10 +114,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Pull Docker image
-        run: docker pull redgate/flyway
-
+        
       - name: Database Migration Check
         run: |
           docker run --rm \
@@ -127,7 +124,7 @@ jobs:
             -v "$(pwd)/flyway/config:/flyway/conf" \
             redgate/flyway \
             -url="jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true" \
-            -user=flyway -password=123456 \
+            -user=${{secrets.MYSQL_USER}} -password=${{secrets.MYSQL_PASSWORD}} \
             migrate
 
   BuildAndPushImage:
