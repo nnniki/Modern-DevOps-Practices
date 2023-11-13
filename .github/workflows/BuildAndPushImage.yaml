@@ -118,9 +118,10 @@ jobs:
       - name: Database Migration Check
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
-          url: "jdbc:mysql://172.17.0.2:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true"
+          url: "jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true"
           user: ${{secrets.MYSQL_USER}}
           password: ${{secrets.MYSQL_PASSWORD}}
+          locations: $(pwd)/flyway/migrations
             
   TrivyScan:
     runs-on: ubuntu-latest
