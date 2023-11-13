@@ -5,9 +5,6 @@ on:
     branches: main
   workflow_dispatch:
   
-env:
-  VERSION: $(git log -1 --pretty=%h)
-  
 jobs:
   SnykTest:
     runs-on: ubuntu-latest
@@ -137,13 +134,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - uses: tenhaus/get-release-or-tag@v2
+        id: tag
+
       - name: Build an image
-        run: docker build -t "python_app:$VERSION" --build-arg VERSION="$VERSION".
+        run: docker build -t "python_app:${{ steps.tag.outputs.tag }}" .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'python_app:$VERSION'
+          image-ref: 'python_app:${{ steps.tag.outputs.tag }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -165,12 +165,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - uses: tenhaus/get-release-or-tag@v2
+        id: tag
+
       - name: Build an image
-        run: docker build -t "python_app:$VERSION" --build-arg VERSION="$VERSION" .
+        run: docker build -t "python_app:${{ steps.tag.outputs.tag }}" .
           
       - name: Tag an image
-        run: docker tag python_app:$VERSION nikolaykostandiev/modern_devops_practices:$VERSION
+        run: docker tag python_app:${{ steps.tag.outputs.tag }} nikolaykostandiev/modern_devops_practices:${{ steps.tag.outputs.tag }}
 
       - name: Push an image to DockerHub
-        run: docker push nikolaykostandiev/modern_devops_practices:$VERSION
+        run: docker push nikolaykostandiev/modern_devops_practices:${{ steps.tag.outputs.tag }}
     
