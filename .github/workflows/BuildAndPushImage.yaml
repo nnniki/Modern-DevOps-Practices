@@ -93,7 +93,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
-  DatabaseMigrationsCheck:
+  CheckForDatabaseMigrations:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -127,7 +127,7 @@ jobs:
             -v "$(pwd)/flyway/config:/flyway/conf" \
             redgate/flyway \
             -url="jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true" \
-            -user=${{secrets.MYSQL_USER}} -password=${{secrets.MYSQL_PASSWORD}} \
+            -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} \
             migrate
 
   BuildAndPushImage:
