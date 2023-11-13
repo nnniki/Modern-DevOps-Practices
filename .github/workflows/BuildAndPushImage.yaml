@@ -93,33 +93,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
-  CheckForDatabaseMigrations:
+  DatabaseMigrationsCheck:
     runs-on: ubuntu-latest
     services:
-      mySQL:
+      mysql:
         image: mysql:8.1
         env:
-          MYSQL_DB: ${{secrets.MYSQL_DB}}
-          MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_ROOT_PASSWORD}}
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          MYSQL_DATABASE: ${{secrets.MYSQL_DB}}
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "mysqladmin ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
-        - 3306:3306
-        
+          - 3306:3306
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - uses: joshuaavalon/flyway-action@v3.0.0
-        with:
-          url: "jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true"
-          user: MYSQL_USER
-          password: MYSQL_ROOT_PASSWORD
+      - name: Pull Docker image
+        run: docker pull redgate/flyway
+
+      - name: Database Migration Check
+        run: |
+          docker run --rm \
+            --net="host" \
+            -v "$(pwd)/flyway/db:/flyway/db" \
+            -v "$(pwd)/flyway/migrations:/flyway/sql" \
+            -v "$(pwd)/flyway/config:/flyway/conf" \
+            redgate/flyway \
+            -url="jdbc:mysql://localhost:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true" \
+            -user=${{secrets.MYSQL_USER}} -password=${{secrets.MYSQL_PASSWORD}} \
+            migrate
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
