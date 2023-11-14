@@ -91,7 +91,7 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Database Migration Check
-      - uses: joshuaavalon/flyway-action@v3.0.0
+        uses: joshuaavalon/flyway-action@v3.0.0
         with:
           url: jdbc:mysql://172.17.0.2:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true
           user: $MYSQL_USER
