@@ -93,7 +93,7 @@ jobs:
       - name: Database Migration Check
         run: |
           docker run --rm \
-          --net="host"
+          --net="host" \
           -v "$(pwd)/flyway/db:/flyway/db" \
           -v "$(pwd)/flyway/migrations:/flyway/sql" \
           -v "$(pwd)/flyway/config:/flyway/conf" \
