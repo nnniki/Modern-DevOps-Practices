@@ -94,8 +94,8 @@ jobs:
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
           url: jdbc:mysql://172.17.0.2:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true
-          user: $MYSQL_USER
-          password: $MYSQL_PASSWORD
+          user: ${{secrets.MYSQL_USER}}
+          password: ${{secrets.MYSQL_PASSWORD}}
         # run: |
         #   docker run --rm \
         #     -v "$(pwd)/flyway/db:/flyway/db" \
