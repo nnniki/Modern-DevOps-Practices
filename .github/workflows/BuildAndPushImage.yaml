@@ -6,6 +6,43 @@ on:
   workflow_dispatch:
   
 jobs:
+  CheckCodeAndStyle:
+    runs-on: ubuntu-latest
+    container: python:3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install flake8
+        run: python3 -m pip install flake8
+
+      - name: Check style
+        run: flake8 src
+        
+  EditorConfigCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Install editorconfig-checker
+        run: pip install editorconfig-checker
+        
+      - name: Start checking
+        run: ec
+
+  MarkdownFilesCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install mardownlint
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint test
+        run: markdownlint **/*.md
+        
   SnykTest:
     runs-on: ubuntu-latest
     steps:
@@ -31,43 +68,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  CheckCodeAndStyle:
-    runs-on: ubuntu-latest
-    container: python:3
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install flake8
-        run: python3 -m pip install flake8
-
-      - name: Check style
-        run: flake8 src
-
-  EditorConfigCheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        
-      - name: Install editorconfig-checker
-        run: pip install editorconfig-checker
-        
-      - name: Start checking
-        run: ec
-        
-  MarkdownFilesCheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install mardownlint
-        run: npm install -g markdownlint-cli
-
-      - name: Run markdownlint test
-        run: markdownlint .
 
   HardcodedSecretsCheck:
     runs-on: ubuntu-latest
@@ -133,23 +133,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Get tag
-        uses: tenhaus/get-release-or-tag@v2
-        id: tag
 
       - name: Build an image
-        run: docker build -t "python_app:${{ steps.tag.outputs.tag }}" .
+        run: docker build -t "python_app:v1.0" .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'python_app:${{ steps.tag.outputs.tag }}'
+          image-ref: 'python_app:v1.0'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          severity: 'CRITICAL, HIGH'
 
   BuildAndPushImage:
     runs-on: ubuntu-latest
