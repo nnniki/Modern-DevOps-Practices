@@ -1,4 +1,4 @@
-FROM 3.12.0-alpine3.18
+FROM python:3.8-alpine
 
 COPY ./src/requirements.txt /usr/src/app/
 RUN pip3 install --no-cache-dir -r /usr/src/app/requirements.txt
