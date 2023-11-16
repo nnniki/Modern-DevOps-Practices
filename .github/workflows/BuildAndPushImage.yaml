@@ -104,9 +104,9 @@ jobs:
   
   
   CheckForDatabaseMigrations:
-     needs: ["CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "HardcodedSecretsCheck", "UnitTests"]
-     runs-on: ubuntu-latest
-     services:
+    needs: ["CheckCodeAndStyle", "EditorConfigCheck", "MarkdownFilesCheck", "HardcodedSecretsCheck", "UnitTests"]
+    runs-on: ubuntu-latest
+    services:
       postgres:
         image: mysql:8.1
         env:
@@ -119,7 +119,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-     steps:
+    steps:
       - uses: actions/checkout@v2
       - uses: joshuaavalon/flyway-action@v3.0.0
         with:
