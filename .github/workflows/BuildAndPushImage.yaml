@@ -138,12 +138,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build an image
-        run: docker build -t "python_app:v1.0" .
+        run: docker build -t "python_app:${{github.sha}}" .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'python_app:v1.0'
+          image-ref: 'python_app:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -165,16 +165,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Get tag
-        uses: tenhaus/get-release-or-tag@v2
-        id: tag
+      # - name: Get tag
+      #   uses: tenhaus/get-release-or-tag@v2
+      #   id: tag
 
       - name: Build an image
-        run: docker build -t "python_app:${{ steps.tag.outputs.tag }}" .
+        run: docker build -t "python_app:${{ github.sha }}" .
           
       - name: Tag an image
-        run: docker tag python_app:${{ steps.tag.outputs.tag }} nikolaykostandiev/modern_devops_practices:${{ steps.tag.outputs.tag }}
+        run: docker tag python_app:${{ github.sha }} nikolaykostandiev/modern_devops_practices:${{ github.sha }}
 
       - name: Push an image to DockerHub
-        run: docker push nikolaykostandiev/modern_devops_practices:${{ steps.tag.outputs.tag }}
+        run: docker push nikolaykostandiev/modern_devops_practices:${{ github.sha }}
     
