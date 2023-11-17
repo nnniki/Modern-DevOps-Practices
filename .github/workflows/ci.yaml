@@ -165,10 +165,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Get tag
-      #   uses: tenhaus/get-release-or-tag@v2
-      #   id: tag
-
       - name: Build an image
         run: docker build -t "python_app:${{ github.sha }}" .
           
@@ -177,4 +173,3 @@ jobs:
 
       - name: Push an image to DockerHub
         run: docker push nikolaykostandiev/modern_devops_practices:${{ github.sha }}
-    
