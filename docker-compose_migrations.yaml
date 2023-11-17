@@ -5,8 +5,7 @@ services:
     image: mysql:8.1
     ports:
       - "3306:3306"
-    expose:
-      - '3306'
+    command:  --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4
     environment: 
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_USER=flyway
@@ -16,7 +15,7 @@ services:
   flyway:
     image: redgate/flyway
     depends_on: ["mysql"]
-    command: migrate
+    command: -url=dbc:mysql://mysql:3306/example?autoreconnect=true&allowPublicKeyRetrieval=true -user=flyway -password=123456 migrate
     volumes: 
     - C:\Users\Hello\Desktop\Modern-DevOps-Practices\flyway\db:/flyway/db
     - C:\Users\Hello\Desktop\Modern-DevOps-Practices\flyway\migrations:/flyway/sql
